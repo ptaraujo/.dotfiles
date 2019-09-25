@@ -1,6 +1,6 @@
 [user]
-  name = Stephen Wrathall
-  email = stephen.wrathall@agworld.com.au
+  name = Pedro Araujo
+  email = pedro.araujo@agworld.com
 [alias]
   co = checkout
   hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
@@ -10,7 +10,7 @@
 [credential]
   helper = osxkeychain
 [core]
-  editor = vim
+  editor = nano
   autocrlf = input
 [github]
   user = stwr667

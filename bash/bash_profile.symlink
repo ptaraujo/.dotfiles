@@ -10,15 +10,10 @@ source $HOME/.dotfiles/bash/bash_personal
 export RAILS_ENV=development
 
 ### POSTGRES ###
-# Set the data location of postgres so you don't need it in your start/stop commands:
-# TODO: Remove (now that we use Postgres.app):
-# export PGDATA='/usr/local/var/postgres/'
 # Add Postgres.app's bin to the path:
-export PATH=$PATH:/Applications/Postgres.app/Contents/Versions/latest/bin
-# Increase the 2 kernel memory management values for postgres from very small, to ok values:
-#UPDATE: Shouldn't need these params. Re-installing postgres from brew fixed this issue:
-#sudo sysctl -w kern.sysv.shmall=65536
-#sudo sysctl -w kern.sysv.shmmax=16777216
+# export PATH=$PATH:/Applications/Postgres.app/Contents/Versions/latest/bin
+# Add postgres binary to the path:
+export PATH="/usr/local/opt/postgresql@9.5/bin:$PATH"
 ### END POSTGRES###
 
 # Running bundle install doesn't work for website because of libv8 needing native extensions.
@@ -44,9 +39,7 @@ parse_git_remote() {
 }
 
 get_region_and_rails_env() {
-  if [ "$AGW_region" == "" ]; then
-    return
-  else
+  if [ $PWD == "$HOME/workspace/website" ]; then
     if [ "$RAILS_ENV" == "" ]; then
       rails_env_tmp=dev
     else
@@ -57,13 +50,18 @@ get_region_and_rails_env() {
       append_db_name_tmp=":$AGW_database_name"
     fi
 
-    region_tmp=$AGW_region
+    if [ "$AGW_region" == "" ]; then
+      region_tmp="au"
+    else
+      region_tmp=$AGW_region
+    fi
+
     if [ "$AGW_region" == "us" ]; then
       region_tmp="*USA*"
     fi
 
     echo " $region_tmp:$rails_env_tmp$append_db_name_tmp"
-  fi
+  fi 
 }
 
 export PS1="\[\033[01;34m\]\W\[\033[31m\]\$(parse_git_branch)\[\033[33m\]\$(get_region_and_rails_env) \[\033[00m\]$\[\033[00m\] "
@@ -124,4 +122,8 @@ export PATH=/Library/Frameworks/GDAL.framework/Programs:$PATH
 # /Applications/Postgres.app/Contents/Versions/latest/bin/ogr2ogr
 
 # rvm needs to be at the bottom of the file in case there are other lines in .[ba|z]shrc that redefine path:
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" # Load RVM function into a shell session
+# [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" # Load RVM function into a shell session
+
+
+#[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
+eval "$(rbenv init -)"
